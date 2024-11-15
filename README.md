@@ -1,0 +1,2 @@
+# Red-Black Tree Visualizer
+ The Red-Black Tree Visualizer is an interactive standalone application built using C++ and SFML. It helps users visualize the operations of a red-black tree, a self-balancing binary search tree commonly used in computer science. The application dynamically renders the tree structure, showing how nodes are inserted, deleted, and rebalanced in real-time with smooth animations and intuitive user controls.

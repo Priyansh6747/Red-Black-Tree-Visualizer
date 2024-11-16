@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
         SDL_Quit();
         return -1;
     }
-    int window_x = 1600,window_y = 900;
+    int window_x = 1920,window_y = 1040;
     // Create a window
     SDL_Window* window = SDL_CreateWindow("Tree Visualizer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_x, window_y, SDL_WINDOW_SHOWN);
     if (!window) {
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Load a font
-    TTF_Font* font = TTF_OpenFont("D:/FONTS/abel/abel-regular.ttf", 24);
+    TTF_Font* font = TTF_OpenFont("Fonts/abel-regular.ttf", 24);
     if (!font) {
         SDL_Log("Failed to load font: %s", TTF_GetError());
         SDL_DestroyRenderer(renderer);

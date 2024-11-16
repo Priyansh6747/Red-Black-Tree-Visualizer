@@ -62,12 +62,17 @@ int main(int argc, char* argv[]) {
         }
 
         //temporally making a complete binary tree from array
-        int arr[] = {2, 5, 6, 7, 8, 9, 10,11,12,13,14,15,21,23,25,27,30};
+        int arr[] = {
+    2, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+    14, 15, 21, 23, 25, 27, 30
+};
+
+
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
         int level = 0,counter = 1;
-        int r = 15, x = window_x / 2, y = r * 2;
+        int r = 22, x = window_x / 2, y = r * 2;
 
         vector<pair<int, int>> Nodes;
         int currentParent = 0;
@@ -78,9 +83,9 @@ int main(int argc, char* argv[]) {
                 y = r * 2;
             } else {
                 x = Nodes[currentParent].first;
-                if (i % 2 == 1) x -= window_x / pow(2, level + 1);
-                else x += window_x / pow(2, level + 1);  // Right child (move right)
-                y = Nodes[currentParent].second + 2 * r;  // Y is always below the parent
+                if (i % 2 == 1) x -= window_x / pow(2, level +1.3 );
+                else x += window_x / pow(2, level + 1.3 );  // Right child (move right)
+                y = Nodes[currentParent].second + 4 * r;  // Y is always below the parent
             }
             RenderCircleWithNumber(renderer, font, x, y, r, arr[i], CircleColor, TextColor);
             if (i > 0)

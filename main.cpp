@@ -23,11 +23,14 @@ int main(int argc, char* argv[]) {
     SDL_Color TextColor = {0,0,255,255};
     SDL_Color CircleColor = {255,255,0,255};
     SDL_Color LineColor = {0,255,255,255};
-    SDL_Color InputFieldColor = {255,255,255,255};
+    SDL_Color InputFieldColor = {0,255,0,255};
+    SDL_Color InputFieldColorActive = {0,0,2,0};
     SDL_Color InsertButtonColor = {150,200,190,255};
+    SDL_Color DeleteButtonColor = {255,0,0,255};
 
     SDL_Rect inputField = {50, window_y - 80, 200, 40};  // Input field rectangle
     SDL_Rect button = {300, window_y - 80, 100, 40};     // Button rectangle
+    SDL_Rect DeleteBtn = {450, window_y - 80, 100, 40};     // Button rectangle
 
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -69,6 +72,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     string inputText;
+    bool bIsInputActive = false;
     // Main loop
     bool running = true;
     SDL_Event event;
@@ -89,19 +93,33 @@ int main(int argc, char* argv[]) {
                         inputText.clear();  // Clear input field
                     }
                 }else if (mouseX > inputField.x && mouseX < inputField.x + inputField.w && mouseY > inputField.y && mouseY < inputField.y + inputField.h){
-                    SDL_StartTextInput();
-                }else SDL_StopTextInput();
-            } else if (event.type == SDL_TEXTINPUT) {
-                inputText += event.text.text[0];
-                cout <<event.text.text[0]<<" ";
-            }
+                    {
+                        SDL_StartTextInput();
+                        bIsInputActive = true;
+                    }
+                }else if (mouseX > DeleteBtn.x && mouseX < DeleteBtn.x + DeleteBtn.w && mouseY > DeleteBtn.y && mouseY < DeleteBtn.y + DeleteBtn.h){
+                    for(int i =0;i<arr.size();i++)
+                        if(!inputText.empty() && arr[i] == StringToInt(inputText)){
+                            arr.erase(arr.begin() + i);
+                            inputText.clear();
+                        }
+                }
+                else {
+                    SDL_StopTextInput();
+                    bIsInputActive = false;
+                }
+            } else if (event.type == SDL_TEXTINPUT) inputText += event.text.text[0];
+
         }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        string InputFieldText = inputText.empty()?"Enter":inputText;
-        RenderInputField(renderer,font,inputField,InputFieldText,TextColor,InputFieldColor);
+        string InputFieldText = inputText.empty()?(bIsInputActive?"Enter":"Click To Enter"):inputText;
+        (bIsInputActive)?
+        RenderInputField(renderer,font,inputField,InputFieldText,TextColor,InputFieldColor):
+        RenderInputField(renderer,font,inputField,InputFieldText,TextColor,InputFieldColorActive);
         RenderButton(renderer,font,button,"Insert",InsertButtonColor,TextColor);
+        RenderButton(renderer,font,DeleteBtn,"Delete",DeleteButtonColor,TextColor);
 
         int level = 0,counter = 1;
         int r = 22, x = window_x / 2, y = r * 2;

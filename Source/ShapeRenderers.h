@@ -1,7 +1,7 @@
 #ifndef RED_BLACK_TREE_VISUALIZER_SHAPERENDERERS_H
 #define RED_BLACK_TREE_VISUALIZER_SHAPERENDERERS_H
-#include "src/include/SDL2/SDL.h"
-#include "src/include/SDL2/SDL_ttf.h"
+#include "../src/include/SDL2/SDL.h"
+#include "../src/include/SDL2/SDL_ttf.h"
 #include "string"
 #include "cmath"
 // Function to render a circle with a number in its center

@@ -1,16 +1,35 @@
+//include SDL2 Library
 #include "src/include/SDL2/SDL.h"
 #include "src/include/SDL2/SDL_ttf.h"
-#include "Source/RBTree.h"
+//c++11 std libraries
 #include "cmath"
-#include "ShapeRenderers.h"
 #include "vector"
-#include <utility>
+#include "string"
+#include "iostream"
+//custom headers
+#include "Source/RBTree.h"
+#include "Source/ShapeRenderers.h"
+#include "Source/UI.h"
+#include "Source/Utilities.h"
+
+
+using namespace std;
+
 
 int main(int argc, char* argv[]) {
+    //window
+    int window_x = 1920,window_y = 1040;
     //RGBA
-    SDL_Color TextColor = {255,255,255,255};
+    SDL_Color TextColor = {0,0,255,255};
     SDL_Color CircleColor = {255,255,0,255};
     SDL_Color LineColor = {0,255,255,255};
+    SDL_Color InputFieldColor = {255,255,255,255};
+    SDL_Color InsertButtonColor = {150,200,190,255};
+
+    SDL_Rect inputField = {50, window_y - 80, 200, 40};  // Input field rectangle
+    SDL_Rect button = {300, window_y - 80, 100, 40};     // Button rectangle
+
+
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         SDL_Log("SDL_Init failed: %s", SDL_GetError());
         return -1;
@@ -21,7 +40,7 @@ int main(int argc, char* argv[]) {
         SDL_Quit();
         return -1;
     }
-    int window_x = 1920,window_y = 1040;
+
     // Create a window
     SDL_Window* window = SDL_CreateWindow("Tree Visualizer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_x, window_y, SDL_WINDOW_SHOWN);
     if (!window) {
@@ -49,27 +68,40 @@ int main(int argc, char* argv[]) {
         SDL_Quit();
         return -1;
     }
-
+    string inputText;
     // Main loop
     bool running = true;
     SDL_Event event;
+    vector<int> arr = {};
     while (running) {
         // Event handling
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
+            if (event.type == SDL_QUIT)
                 running = false;
+            else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_BACKSPACE && !inputText.empty())inputText.pop_back();
+            else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                int mouseX = event.button.x;
+                int mouseY = event.button.y;
+                if (mouseX > button.x && mouseX < button.x + button.w && mouseY > button.y && mouseY < button.y + button.h) {
+                    // Button clicked
+                    if (!inputText.empty()) {
+                        arr.emplace_back(StringToInt(inputText));
+                        inputText.clear();  // Clear input field
+                    }
+                }else if (mouseX > inputField.x && mouseX < inputField.x + inputField.w && mouseY > inputField.y && mouseY < inputField.y + inputField.h){
+                    SDL_StartTextInput();
+                }else SDL_StopTextInput();
+            } else if (event.type == SDL_TEXTINPUT) {
+                inputText += event.text.text[0];
+                cout <<event.text.text[0]<<" ";
             }
         }
-
-        //temporally making a complete binary tree from array
-        int arr[] = {
-    2, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-    14, 15, 21, 23, 25, 27, 30
-};
-
-
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+
+        string InputFieldText = inputText.empty()?"Enter":inputText;
+        RenderInputField(renderer,font,inputField,InputFieldText,TextColor,InputFieldColor);
+        RenderButton(renderer,font,button,"Insert",InsertButtonColor,TextColor);
 
         int level = 0,counter = 1;
         int r = 22, x = window_x / 2, y = r * 2;
@@ -77,7 +109,7 @@ int main(int argc, char* argv[]) {
         vector<pair<int, int>> Nodes;
         int currentParent = 0;
 
-        for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++) {
+        for (int i = 0; i < arr.size(); i++) {
             if (i == 0) {
                 x = window_x / 2;
                 y = r * 2;
@@ -100,6 +132,7 @@ int main(int argc, char* argv[]) {
         }
         SDL_RenderPresent(renderer);
     }
+    SDL_StopTextInput();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

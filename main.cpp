@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
     SDL_Color InputFieldColorActive = {0,0,2,0};
     SDL_Color InsertButtonColor = {150,200,190,255};
     SDL_Color DeleteButtonColor = {255,0,0,255};
+    SDL_Color BackGroundColor = {0,0,0,255};
 
     SDL_Rect inputField = {50, window_y - 80, 200, 40};  // Input field rectangle
     SDL_Rect button = {300, window_y - 80, 100, 40};     // Button rectangle
@@ -111,7 +112,7 @@ int main(int argc, char* argv[]) {
             } else if (event.type == SDL_TEXTINPUT) inputText += event.text.text[0];
 
         }
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, BackGroundColor.r, BackGroundColor.g, BackGroundColor.b, BackGroundColor.a);
         SDL_RenderClear(renderer);
 
         string InputFieldText = inputText.empty()?(bIsInputActive?"Enter":"Click To Enter"):inputText;

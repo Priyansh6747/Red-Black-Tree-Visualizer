@@ -2,6 +2,7 @@
 #include "src/include/SDL2/SDL.h"
 #include "src/include/SDL2/SDL_ttf.h"
 //c++11 std libraries
+#include "bits/stdc++.h"
 #include "cmath"
 #include "vector"
 #include "string"
@@ -28,6 +29,8 @@ int main(int argc, char* argv[]) {
     SDL_Color InsertButtonColor = {150,200,190,255};
     SDL_Color DeleteButtonColor = {255,0,0,255};
     SDL_Color BackGroundColor = {0,0,0,255};
+    SDL_Color RED = {255,0,0};
+    SDL_Color Green = {0,255,0};
 
     SDL_Rect inputField = {50, window_y - 80, 200, 40};  // Input field rectangle
     SDL_Rect button = {300, window_y - 80, 100, 40};     // Button rectangle
@@ -77,7 +80,8 @@ int main(int argc, char* argv[]) {
     // Main loop
     bool running = true;
     SDL_Event event;
-    vector<int> arr = {};
+    vector<pair<int,bool>> LevelOrder;
+    RBTree Tree;
     while (running) {
         // Event handling
         while (SDL_PollEvent(&event)) {
@@ -90,7 +94,7 @@ int main(int argc, char* argv[]) {
                 if (mouseX > button.x && mouseX < button.x + button.w && mouseY > button.y && mouseY < button.y + button.h) {
                     // Button clicked
                     if (!inputText.empty()) {
-                        arr.emplace_back(StringToInt(inputText));
+                        Tree.insertValue(StringToInt(inputText));
                         inputText.clear();  // Clear input field
                     }
                 }else if (mouseX > inputField.x && mouseX < inputField.x + inputField.w && mouseY > inputField.y && mouseY < inputField.y + inputField.h){
@@ -99,11 +103,12 @@ int main(int argc, char* argv[]) {
                         bIsInputActive = true;
                     }
                 }else if (mouseX > DeleteBtn.x && mouseX < DeleteBtn.x + DeleteBtn.w && mouseY > DeleteBtn.y && mouseY < DeleteBtn.y + DeleteBtn.h){
-                    for(int i =0;i<arr.size();i++)
-                        if(!inputText.empty() && arr[i] == StringToInt(inputText)){
-                            arr.erase(arr.begin() + i);
-                            inputText.clear();
-                        }
+                    if(!inputText.empty()){
+                        Tree.deleteValue(StringToInt(inputText));
+                        LevelOrder.clear();
+                        LevelOrder = Tree.LevelOrder();
+                        inputText.clear();
+                    }
                 }
                 else {
                     SDL_StopTextInput();
@@ -126,9 +131,16 @@ int main(int argc, char* argv[]) {
         int r = 22, x = window_x / 2, y = r * 2;
 
         vector<pair<int, int>> Nodes;
-        int currentParent = 0;
+        LevelOrder = Tree.LevelOrder();
 
-        for (int i = 0; i < arr.size(); i++) {
+        int currentParent = 0;
+        int nullPass=0;
+        for (int i = 0; i < LevelOrder.size(); i++) {
+            if(LevelOrder[i].first == -99) {
+                nullPass++;
+                if(nullPass > 0 && nullPass % 2 ==0) currentParent++;
+                continue;
+            }
             if (i == 0) {
                 x = window_x / 2;
                 y = r * 2;
@@ -138,7 +150,7 @@ int main(int argc, char* argv[]) {
                 else x += window_x / pow(2, level + 1.3 );  // Right child (move right)
                 y = Nodes[currentParent].second + 4 * r;  // Y is always below the parent
             }
-            RenderCircleWithNumber(renderer, font, x, y, r, arr[i], CircleColor, TextColor);
+            RenderCircleWithNumber(renderer, font, x, y, r, LevelOrder[i].first, (LevelOrder[i].second)?RED:Green,TextColor);
             if (i > 0)
                 RenderLine(renderer, Nodes[currentParent].first, Nodes[currentParent].second, x, y, LineColor);
             Nodes.emplace_back(x, y);
@@ -151,6 +163,9 @@ int main(int argc, char* argv[]) {
         }
         SDL_RenderPresent(renderer);
     }
+    Tree.inorder();
+    for(auto i : LevelOrder)
+        cout<<i.first<<" "<<i.second<<"   ";
     SDL_StopTextInput();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

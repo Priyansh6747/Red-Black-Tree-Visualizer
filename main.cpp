@@ -134,11 +134,10 @@ int main(int argc, char* argv[]) {
         LevelOrder = Tree.LevelOrder();
 
         int currentParent = 0;
-        int nullPass=0;
         for (int i = 0; i < LevelOrder.size(); i++) {
             if(LevelOrder[i].first == -99) {
-                nullPass++;
-                if(nullPass > 0 && nullPass % 2 ==0) currentParent++;
+                if (i > 0 && i % 2 == 0)
+                    currentParent++;
                 continue;
             }
             if (i == 0) {
@@ -164,8 +163,6 @@ int main(int argc, char* argv[]) {
         SDL_RenderPresent(renderer);
     }
     Tree.inorder();
-    for(auto i : LevelOrder)
-        cout<<i.first<<" "<<i.second<<"   ";
     SDL_StopTextInput();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

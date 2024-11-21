@@ -21,16 +21,16 @@ int main(int argc, char* argv[]) {
     //window
     int window_x = 1920,window_y = 1040;
     //RGBA
-    SDL_Color TextColor = {0,0,255,255};
+    SDL_Color TextColor = {0,0,0,255};
     SDL_Color CircleColor = {255,255,0,255};
-    SDL_Color LineColor = {0,255,255,255};
-    SDL_Color InputFieldColor = {0,255,0,255};
-    SDL_Color InputFieldColorActive = {0,0,2,0};
-    SDL_Color InsertButtonColor = {150,200,190,255};
+    SDL_Color LineColor = {0,255,0,255};
+    SDL_Color InputFieldColor = {200,200,200,30};
+    SDL_Color InputFieldColorActive = {255,255,255,40};
+    SDL_Color InsertButtonColor = {0,255,0,30};
     SDL_Color DeleteButtonColor = {255,0,0,255};
-    SDL_Color BackGroundColor = {0,0,0,255};
+    SDL_Color BackGroundColor = {150,150,210,45};
     SDL_Color RED = {255,0,0};
-    SDL_Color Green = {0,255,0};
+    SDL_Color Green = {0,0,0,255};
 
     SDL_Rect inputField = {50, window_y - 80, 200, 40};  // Input field rectangle
     SDL_Rect button = {300, window_y - 80, 100, 40};     // Button rectangle
@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Load a font
-    TTF_Font* font = TTF_OpenFont("Fonts/abel-regular.ttf", 24);
+    TTF_Font* font = TTF_OpenFont("Fonts/Baloo-Regular.ttf", 24);
     if (!font) {
         SDL_Log("Failed to load font: %s", TTF_GetError());
         SDL_DestroyRenderer(renderer);
@@ -121,9 +121,9 @@ int main(int argc, char* argv[]) {
         SDL_RenderClear(renderer);
 
         string InputFieldText = inputText.empty()?(bIsInputActive?"Enter":"Click To Enter"):inputText;
-        (bIsInputActive)?
-        RenderInputField(renderer,font,inputField,InputFieldText,TextColor,InputFieldColor):
-        RenderInputField(renderer,font,inputField,InputFieldText,TextColor,InputFieldColorActive);
+
+        RenderInputField(renderer,font,inputField,InputFieldText,
+                         (bIsInputActive)?InputFieldColorActive:InputFieldColor,TextColor);
         RenderButton(renderer,font,button,"Insert",InsertButtonColor,TextColor);
         RenderButton(renderer,font,DeleteBtn,"Delete",DeleteButtonColor,TextColor);
 
@@ -154,9 +154,9 @@ int main(int argc, char* argv[]) {
                 else x += window_x / pow(2, level + widthAdjuster );  // Right child (move right)
                 y = Nodes[currentParent].second + 4 * r;  // Y is always below the parent
             }
-            RenderCircleWithNumber(renderer, font, x, y, r, LevelOrder[i].first, (LevelOrder[i].second)?RED:Green,TextColor);
+            RenderCircleWithNumber(renderer, font, x, y, r, LevelOrder[i].first, (LevelOrder[i].second)?RED:Green,(LevelOrder[i].second)?RED:Green);
             if (i > 0)
-                RenderLine(renderer, Nodes[currentParent].first, Nodes[currentParent].second, x, y, LineColor);
+                RenderLine(renderer, Nodes[currentParent].first, Nodes[currentParent].second+r, x, y-r, (LevelOrder[i].second)?RED:Green);
             Nodes.emplace_back(x, y);
             if (i > 0 && i % 2 == 0)
                 currentParent++;

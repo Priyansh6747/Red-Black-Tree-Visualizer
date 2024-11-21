@@ -18,27 +18,47 @@ class RBTree
 private:
     Node *root;
 protected:
+
     void rotateLeft(Node *&);
+
     void rotateRight(Node *&);
+
     void fixInsertRBTree(Node *&);
+
     void fixDeleteRBTree(Node *&);
+
     void inorderBST(Node *&);
+
     void preorderBST(Node *&);
+
     int getColor(Node *&);
+
     void setColor(Node *&, int);
+
     Node *minValueNode(Node *&);
+
     Node *maxValueNode(Node *&);
+
     Node* insertBST(Node *&, Node *&);
+
     Node* deleteBST(Node *&, int);
+
     int getBlackHeight(Node *);
+
 public:
     RBTree();
+
     void insertValue(int);
+
     void deleteValue(int);
+
     void merge(RBTree);
+
     void inorder();
+
     void preorder();
-    class std::vector<class std::pair<int,bool>> LevelOrder();
+
+    vector<pair<int,bool>> LevelOrder();
 };
 
 Node::Node(int data) {
@@ -349,9 +369,7 @@ int RBTree::getBlackHeight(Node *node) {
     return blackheight;
 }
 
-// Test case 1 : 5 2 9 1 6 8 0 20 30 35 40 50 0
-// Test case 2 : 3 0 5 0
-// Test case 3 : 2 1 3 0 8 9 4 5 0
+
 
 void RBTree::merge(RBTree rbTree2) {
     int temp;

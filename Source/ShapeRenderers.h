@@ -8,12 +8,14 @@
 void RenderCircleWithNumber(SDL_Renderer* renderer, TTF_Font* font, int x, int y, int radius, int number, SDL_Color circleColor, SDL_Color textColor) {
     // Draw the circle
     SDL_SetRenderDrawColor(renderer, circleColor.r, circleColor.g, circleColor.b, circleColor.a);
-    for (int angle = 0; angle < 360; angle++) {
-        double rad = angle * M_PI / 180.0; // Convert degrees to radians
-        int px = x + radius * cos(rad);   // X position
-        int py = y + radius * sin(rad);   // Y position
-        SDL_RenderDrawPoint(renderer, px, py);
-    }
+    float thickness = 3;
+    for(int t = 0;t <= thickness ; t++)
+        for (int angle = 0; angle < 360; angle++) {
+            double rad = angle * M_PI / 180.0; // Convert degrees to radians
+            int px = x + (radius + t) * cos(rad);   // X position
+            int py = y + (radius + t) * sin(rad);   // Y position
+            SDL_RenderDrawPoint(renderer, px, py);
+        }
 
     // Convert the number to a string
     std::string text = std::to_string(number);
@@ -39,9 +41,20 @@ void RenderCircleWithNumber(SDL_Renderer* renderer, TTF_Font* font, int x, int y
     SDL_DestroyTexture(textTexture);
 }
 
-void RenderLine(SDL_Renderer* renderer, int x1, int y1, int x2, int y2,SDL_Color LineColor) {
-    SDL_SetRenderDrawColor(renderer, LineColor.r,LineColor.g,LineColor.b,LineColor.a);
-    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+void RenderLine(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, SDL_Color LineColor) {
+    SDL_SetRenderDrawColor(renderer, LineColor.r, LineColor.g, LineColor.b, LineColor.a);
+    int thickness = 2;
+    for (int t = -thickness / 2; t <= thickness / 2; t++) {
+        if (x1 == x2) { // Vertical line
+            SDL_RenderDrawLine(renderer, x1 + t, y1, x2 + t, y2);
+        } else if (y1 == y2) { // Horizontal line
+            SDL_RenderDrawLine(renderer, x1, y1 + t, x2, y2 + t);
+        } else { // Diagonal line
+            SDL_RenderDrawLine(renderer, x1 + t, y1, x2 + t, y2);
+            SDL_RenderDrawLine(renderer, x1, y1 + t, x2, y2 + t);
+        }
+    }
 }
+
 
 #endif //RED_BLACK_TREE_VISUALIZER_SHAPERENDERERS_H

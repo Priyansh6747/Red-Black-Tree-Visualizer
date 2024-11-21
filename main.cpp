@@ -138,15 +138,20 @@ int main(int argc, char* argv[]) {
             if(LevelOrder[i].first == -99) {
                 if (i > 0 && i % 2 == 0)
                     currentParent++;
+                if (--counter == 0) {
+                    level++;
+                    counter = pow(2, level);
+                }
                 continue;
             }
             if (i == 0) {
                 x = window_x / 2;
                 y = r * 2;
             } else {
+                float widthAdjuster = 1.3;
                 x = Nodes[currentParent].first;
-                if (i % 2 == 1) x -= window_x / pow(2, level +1.3 );
-                else x += window_x / pow(2, level + 1.3 );  // Right child (move right)
+                if (i % 2 == 1) x -= window_x / pow(2, level + widthAdjuster);
+                else x += window_x / pow(2, level + widthAdjuster );  // Right child (move right)
                 y = Nodes[currentParent].second + 4 * r;  // Y is always below the parent
             }
             RenderCircleWithNumber(renderer, font, x, y, r, LevelOrder[i].first, (LevelOrder[i].second)?RED:Green,TextColor);
@@ -162,7 +167,8 @@ int main(int argc, char* argv[]) {
         }
         SDL_RenderPresent(renderer);
     }
-    Tree.inorder();
+    for(auto i : Tree.LevelOrder())
+        cout<<i.first<<" "<<i.second<<"  ";
     SDL_StopTextInput();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

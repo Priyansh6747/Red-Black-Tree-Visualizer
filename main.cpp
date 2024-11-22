@@ -81,6 +81,7 @@ int main(int argc, char* argv[]) {
         SDL_Quit();
         return -1;
     }
+    vector<pair<int,bool>> InputArray; // for bool true mean insert false mean deletion
     string inputText;
     bool bIsInputActive = false;
     // Main loop
@@ -101,6 +102,7 @@ int main(int argc, char* argv[]) {
                     // Button clicked
                     if (!inputText.empty()) {
                         Tree.insertValue(StringToInt(inputText));
+                        InputArray.emplace_back(StringToInt(inputText),true);
                         inputText.clear();  // Clear input field
                     }
                 }else if (mouseX > inputField.x && mouseX < inputField.x + inputField.w && mouseY > inputField.y && mouseY < inputField.y + inputField.h){
@@ -110,6 +112,7 @@ int main(int argc, char* argv[]) {
                     }
                 }else if (mouseX > DeleteBtn.x && mouseX < DeleteBtn.x + DeleteBtn.w && mouseY > DeleteBtn.y && mouseY < DeleteBtn.y + DeleteBtn.h){
                     if(!inputText.empty()){
+                        InputArray.emplace_back(StringToInt(inputText),false);
                         Tree.deleteValue(StringToInt(inputText));
                         LevelOrder.clear();
                         LevelOrder = Tree.LevelOrder();
@@ -127,7 +130,15 @@ int main(int argc, char* argv[]) {
                     SDL_StopTextInput();
                     bIsInputActive = false;
                 }
-            } else if (event.type == SDL_TEXTINPUT) inputText += event.text.text[0];
+            } else if (event.type == SDL_TEXTINPUT) {
+                char currentChar = event.text.text[0];
+                if(currentChar == '-') {
+                    if (inputText.empty())
+                        inputText += currentChar;
+                }
+                else if(currentChar < '0' || currentChar >'9') continue;
+                else inputText += currentChar;
+            }
 
         }
         SDL_SetRenderDrawColor(renderer, BackGroundColor.r, BackGroundColor.g, BackGroundColor.b, BackGroundColor.a);

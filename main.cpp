@@ -28,6 +28,7 @@ int main(int argc, char* argv[]) {
     SDL_Color InputFieldColorActive = {255,255,255,40};
     SDL_Color InsertButtonColor = {0,255,0,30};
     SDL_Color DeleteButtonColor = {255,0,0,255};
+    SDL_Color ResetButtonColor = {0,0,250,255};
     SDL_Color BackGroundColor = {150,150,210,45};
     SDL_Color RED = {255,0,0};
     SDL_Color Green = {0,0,0,255};
@@ -35,6 +36,7 @@ int main(int argc, char* argv[]) {
     SDL_Rect inputField = {50, window_y - 80, 200, 40};  // Input field rectangle
     SDL_Rect button = {300, window_y - 80, 100, 40};     // Button rectangle
     SDL_Rect DeleteBtn = {450, window_y - 80, 100, 40};     // Button rectangle
+    SDL_Rect ResetBtn = {600, window_y - 80, 100, 40};     // Button rectangle
 
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -109,6 +111,9 @@ int main(int argc, char* argv[]) {
                         LevelOrder = Tree.LevelOrder();
                         inputText.clear();
                     }
+                }else if (mouseX > ResetBtn.x && mouseX < ResetBtn.x + ResetBtn.w && mouseY > ResetBtn.y && mouseY < ResetBtn.y + ResetBtn.h){
+                    for (auto i : LevelOrder)
+                        Tree.deleteValue(i.first);
                 }
                 else {
                     SDL_StopTextInput();
@@ -126,6 +131,7 @@ int main(int argc, char* argv[]) {
                          (bIsInputActive)?InputFieldColorActive:InputFieldColor,TextColor);
         RenderButton(renderer,font,button,"Insert",InsertButtonColor,TextColor);
         RenderButton(renderer,font,DeleteBtn,"Delete",DeleteButtonColor,TextColor);
+        RenderButton(renderer,font,ResetBtn,"Reset",ResetButtonColor,TextColor);
 
         int level = 0,counter = 1;
         int r = 22, x = window_x / 2, y = r * 2;

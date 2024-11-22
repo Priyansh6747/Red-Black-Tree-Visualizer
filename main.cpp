@@ -29,6 +29,8 @@ int main(int argc, char* argv[]) {
     SDL_Color InsertButtonColor = {0,255,0,30};
     SDL_Color DeleteButtonColor = {255,0,0,255};
     SDL_Color ResetButtonColor = {0,0,250,255};
+    SDL_Color SaveBtnColor = {150,255,255,45};
+    SDL_Color LoadBtnColor = {150,255,255,45};
     SDL_Color BackGroundColor = {150,150,210,45};
     SDL_Color RED = {255,0,0};
     SDL_Color Green = {0,0,0,255};
@@ -36,7 +38,9 @@ int main(int argc, char* argv[]) {
     SDL_Rect inputField = {50, window_y - 80, 200, 40};  // Input field rectangle
     SDL_Rect button = {300, window_y - 80, 100, 40};     // Button rectangle
     SDL_Rect DeleteBtn = {450, window_y - 80, 100, 40};     // Button rectangle
-    SDL_Rect ResetBtn = {600, window_y - 80, 100, 40};     // Button rectangle
+    SDL_Rect ResetBtn = {600, window_y - 80, 100, 40};
+    SDL_Rect SaveBtn = {window_x-100, 0, 100, 40};     // Button rectangle
+    SDL_Rect LoadBtn = {window_x-240, 0, 100, 40};     // Button rectangle
 
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -114,6 +118,10 @@ int main(int argc, char* argv[]) {
                 }else if (mouseX > ResetBtn.x && mouseX < ResetBtn.x + ResetBtn.w && mouseY > ResetBtn.y && mouseY < ResetBtn.y + ResetBtn.h){
                     for (auto i : LevelOrder)
                         Tree.deleteValue(i.first);
+                }else if (mouseX > SaveBtn.x && mouseX < SaveBtn.x + SaveBtn.w && mouseY > SaveBtn.y && mouseY < SaveBtn.y + SaveBtn.h){
+                    cout<<"Saving ";
+                }else if (mouseX > LoadBtn.x && mouseX < LoadBtn.x + LoadBtn.w && mouseY > LoadBtn.y && mouseY < LoadBtn.y + LoadBtn.h){
+                    cout<<"Loading ";
                 }
                 else {
                     SDL_StopTextInput();
@@ -132,6 +140,8 @@ int main(int argc, char* argv[]) {
         RenderButton(renderer,font,button,"Insert",InsertButtonColor,TextColor);
         RenderButton(renderer,font,DeleteBtn,"Delete",DeleteButtonColor,TextColor);
         RenderButton(renderer,font,ResetBtn,"Reset",ResetButtonColor,TextColor);
+        RenderButton(renderer,font,SaveBtn,"Save",SaveBtnColor,TextColor);
+        RenderButton(renderer,font,LoadBtn,"Load",LoadBtnColor,TextColor);
 
         int level = 0,counter = 1;
         int r = 22, x = window_x / 2, y = r * 2;
@@ -173,8 +183,6 @@ int main(int argc, char* argv[]) {
         }
         SDL_RenderPresent(renderer);
     }
-    for(auto i : Tree.LevelOrder())
-        cout<<i.first<<" "<<i.second<<"  ";
     SDL_StopTextInput();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

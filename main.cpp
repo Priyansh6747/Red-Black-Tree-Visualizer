@@ -12,6 +12,8 @@
 #include "Source/ShapeRenderers.h"
 #include "Source/UI.h"
 #include "Source/Utilities.h"
+#include "Source/SaveHeap.h"
+
 
 
 using namespace std;
@@ -81,14 +83,18 @@ int main(int argc, char* argv[]) {
         SDL_Quit();
         return -1;
     }
+
+    //declares
     vector<pair<int,bool>> InputArray; // for bool true mean insert false mean deletion
     string inputText;
     bool bIsInputActive = false;
-    // Main loop
-    bool running = true;
     SDL_Event event;
     vector<pair<int,bool>> LevelOrder;
     RBTree Tree;
+    TreeData CurrentTree;
+
+    // Main loop
+    bool running = true;
     while (running) {
         // Event handling
         while (SDL_PollEvent(&event)) {
@@ -197,7 +203,8 @@ int main(int argc, char* argv[]) {
         }
         SDL_RenderPresent(renderer);
     }
-    for(auto it : InputArray)
+    CurrentTree.SetInfo(InputArray,"A");
+    for(auto it : CurrentTree.GetInput())
         cout<<it.first<<" "<<((it.second)?"insert ":"Delete")<<"  ";
     SDL_StopTextInput();
     SDL_DestroyRenderer(renderer);

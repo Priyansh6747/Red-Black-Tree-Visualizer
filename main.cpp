@@ -92,8 +92,7 @@ int main(int argc, char* argv[]) {
     vector<pair<int,bool>> LevelOrder;
     RBTree Tree;
     TreeData CurrentTree;
-    SaveManager SManager;
-    //loadSaveManager(SManager, (string &) "Saved/Saves.dat");
+
 
     // Main loop
     bool running = true;
@@ -129,29 +128,9 @@ int main(int argc, char* argv[]) {
                 }else if (mouseX > ResetBtn.x && mouseX < ResetBtn.x + ResetBtn.w && mouseY > ResetBtn.y && mouseY < ResetBtn.y + ResetBtn.h){
                     for (auto i : LevelOrder)
                         Tree.deleteValue(i.first);
-                }else if (mouseX > SaveBtn.x && mouseX < SaveBtn.x + SaveBtn.w && mouseY > SaveBtn.y && mouseY < SaveBtn.y + SaveBtn.h){
-                    CurrentTree.SetInfo(InputArray,"FirstSave");
-                    //SManager.insert(CurrentTree);
-                    SaveManager NSM;
-                    NSM.insert(CurrentTree);
-                    OverWriteSaveManager(NSM, (string &) "Saves.dat");
-                }else if (mouseX > LoadBtn.x && mouseX < LoadBtn.x + LoadBtn.w && mouseY > LoadBtn.y && mouseY < LoadBtn.y + LoadBtn.h){
-                    //clear previous tree
-                    for (auto i : LevelOrder)
-                        Tree.deleteValue(i.first);
-                    CurrentTree.clear();
-                    while (!SManager.Empty()){
-                        CurrentTree = SManager.GetTop();
-                        if(CurrentTree.GetName() == "FirstSave")
-                            for(auto it : CurrentTree.GetInput()){
-                                if(it.second){
-                                    Tree.insertValue(it.first);
-                                }else Tree.deleteValue(it.first);
-                            }
-                    }
-
                 }else if(mouseX > QuitBtn.x && mouseX < QuitBtn.x + QuitBtn.w && mouseY > QuitBtn.y && mouseY < QuitBtn.y + QuitBtn.h){
                     running = false;
+                    break;
                 }
                 else {
                     SDL_StopTextInput();
@@ -178,8 +157,6 @@ int main(int argc, char* argv[]) {
         RenderButton(renderer,font,button,"Insert",InsertButtonColor,TextColor);
         RenderButton(renderer,font,DeleteBtn,"Delete",DeleteButtonColor,TextColor);
         RenderButton(renderer,font,ResetBtn,"Reset",ResetButtonColor,TextColor);
-        RenderButton(renderer,font,SaveBtn,"Save",SaveBtnColor,TextColor);
-        RenderButton(renderer,font,LoadBtn,"Load",LoadBtnColor,TextColor);
         RenderButton(renderer,font,QuitBtn,"Quit",QuitColor,TextColor);
 
         int level = 0,counter = 1;

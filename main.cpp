@@ -93,6 +93,7 @@ int main(int argc, char* argv[]) {
     RBTree Tree;
     TreeData CurrentTree;
     SaveManager SManager;
+    //loadSaveManager(SManager, (string &) "Saved/Saves.dat");
 
     // Main loop
     bool running = true;
@@ -129,9 +130,26 @@ int main(int argc, char* argv[]) {
                     for (auto i : LevelOrder)
                         Tree.deleteValue(i.first);
                 }else if (mouseX > SaveBtn.x && mouseX < SaveBtn.x + SaveBtn.w && mouseY > SaveBtn.y && mouseY < SaveBtn.y + SaveBtn.h){
-                    cout<<"Saving ";
+                    CurrentTree.SetInfo(InputArray,"FirstSave");
+                    //SManager.insert(CurrentTree);
+                    SaveManager NSM;
+                    NSM.insert(CurrentTree);
+                    OverWriteSaveManager(NSM, (string &) "Saves.dat");
                 }else if (mouseX > LoadBtn.x && mouseX < LoadBtn.x + LoadBtn.w && mouseY > LoadBtn.y && mouseY < LoadBtn.y + LoadBtn.h){
-                    cout<<"Loading ";
+                    //clear previous tree
+                    for (auto i : LevelOrder)
+                        Tree.deleteValue(i.first);
+                    CurrentTree.clear();
+                    while (!SManager.Empty()){
+                        CurrentTree = SManager.GetTop();
+                        if(CurrentTree.GetName() == "FirstSave")
+                            for(auto it : CurrentTree.GetInput()){
+                                if(it.second){
+                                    Tree.insertValue(it.first);
+                                }else Tree.deleteValue(it.first);
+                            }
+                    }
+
                 }else if(mouseX > QuitBtn.x && mouseX < QuitBtn.x + QuitBtn.w && mouseY > QuitBtn.y && mouseY < QuitBtn.y + QuitBtn.h){
                     running = false;
                 }

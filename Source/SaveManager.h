@@ -21,7 +21,7 @@ public:
         os.write(reinterpret_cast<const char*>(&size), sizeof(size));
 
         vector<TreeData> temp;
-        priority_queue<TreeData,vector<TreeData>,greater<>> pqcpy;
+        priority_queue<TreeData,vector<TreeData>,greater<>> pqcpy = pq;
         while (!pqcpy.empty()){
             temp.push_back(pqcpy.top());
             pqcpy.pop();

@@ -1,16 +1,14 @@
 #ifndef RED_BLACK_TREE_VISUALIZER_UTILITIES_H
 #define RED_BLACK_TREE_VISUALIZER_UTILITIES_H
+
 #include <string>
 #include <cctype>
 #include <stdexcept>
-#include "Source/SaveManager.h"
-#include "Source/SaveHeap.h"
+#include <fstream>
+#include "SaveManager.h"
+#include "SaveHeap.h"
 
 using namespace std;
-#include <string>
-#include <stdexcept>
-#include <cctype>
-#include <iostream>
 
 int StringToInt(const std::string& str) {
     if (str.empty()) {
@@ -19,7 +17,6 @@ int StringToInt(const std::string& str) {
 
     std::string s = (str[0] == '-') ? str.substr(1) : str;
 
-    // Check if the string contains only numeric characters
     for (char c : s) {
         if (!isdigit(c)) {
             throw std::invalid_argument("Input string contains non-numeric characters");
@@ -28,24 +25,40 @@ int StringToInt(const std::string& str) {
 
     try {
         int result = std::stoi(s);
-        return (str[0] == '-') ? -result : result;  // Convert string to integer
+        return (str[0] == '-') ? -result : result;
     } catch (const std::out_of_range&) {
         throw std::out_of_range("Input string represents a number out of range for int");
     }
 }
 
-void OverWriteSaveManager(const SaveManager &obj){
-    ofstream fp("../Saved/Saves.dat",ios::out | ios::binary);
-    if(fp) obj.serialize(fp);
-    else  cout << "Error opening file!" << endl;
-}
-
-void loadSaveManager(SaveManager& SM){
-    ifstream fp("../Saved/Saves.dat", ios::in | ios::binary);
-    if (fp) {
-        SM.deserialize(fp);  // Deserialize the object from the file
+void OverWriteSaveManager(const SaveManager &obj, const string &IncludePath) {
+    ofstream fp(IncludePath, ios::out | ios::binary);
+    if (!fp) {
+        cerr << "Failed to open file for writing: " << IncludePath << endl;
+        return;
+    }
+    obj.serialize(fp);
+    fp.close();
+    if (fp.fail()) {
+        cerr << "Error occurred while writing to file: " << IncludePath << endl;
     } else {
-        cout << "Error opening file!" << endl;
+        cout << "Save successful to file: " << IncludePath << endl;
     }
 }
-#endif //RED_BLACK_TREE_VISUALIZER_UTILITIES_H
+
+void loadSaveManager(SaveManager& SM, const string& IncludePath) {
+    ifstream fp(IncludePath, ios::in | ios::binary);
+    if (!fp) {
+        cerr << "Failed to open file for reading: " << IncludePath << endl;
+        return;
+    }
+    SM.deserialize(fp);
+    fp.close();
+    if (fp.fail()) {
+        cerr << "Error occurred while reading from file: " << IncludePath << endl;
+    } else {
+        cout << "Load successful from file: " << IncludePath << endl;
+    }
+}
+
+#endif // RED_BLACK_TREE_VISUALIZER_UTILITIES_H

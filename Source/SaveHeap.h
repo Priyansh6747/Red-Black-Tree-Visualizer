@@ -4,7 +4,6 @@
 #include "bits/stdc++.h"
 #include <string>
 // For formatting timestamps
-
 using namespace std;
 
 class TreeData {
@@ -12,7 +11,12 @@ private:
     string inputArray; // A string ex "0T 2T 2T 3T 2F"
     string name;
 public:
+    void clear(){
+        inputArray.clear();
+        name.clear();
+    }
     void SetInfo(const vector<pair<int, bool>>& InputArray, const string& Name){
+        clear();
         name=Name;
         for(auto it : InputArray){
             inputArray += to_string(it.first);
@@ -27,6 +31,10 @@ public:
     }
     bool operator>(const TreeData& other) const {
         return name > other.name;
+    }
+
+    string GetName(){
+        return name;
     }
 
     vector<pair<int,bool>> GetInput(){
@@ -53,14 +61,20 @@ public:
 
     static TreeData deserialize(ifstream &is){
         size_t lenIA,lenN;
+        is.read(reinterpret_cast<char *>(&lenIA), sizeof(lenIA));
+        string IA(lenIA, ' ');
+        is.read(&IA[0], lenIA);
 
-        is.read(reinterpret_cast<char *>(&lenIA), lenIA);
-        string IA(lenIA,' ');
-        is.read(&IA[0],lenIA);
 
         is.read(reinterpret_cast<char *>(&lenN), lenN);
         string N(lenN,' ');
         is.read(&N[0],lenN);
+
+        TreeData obj;
+        obj.inputArray = IA;
+        obj.name = N;
+
+        return obj;
     }
 };
 

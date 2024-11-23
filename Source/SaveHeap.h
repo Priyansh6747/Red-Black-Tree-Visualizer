@@ -41,7 +41,6 @@ public:
     }
 
     void serialize(ofstream &os){
-        // Serialize the length of 'a' and 'b', then their contents
         auto lenIA = inputArray.size();
         auto lenN = name.size();
 
@@ -51,21 +50,6 @@ public:
         os.write(reinterpret_cast<const char *>(&lenN), sizeof(lenN));
         os.write(name.c_str(),lenN);
     }
-
-    /*static A deserialize(ifstream &is) {
-        size_t lenA, lenB;
-
-        // Read length of 'a' and 'b'
-        is.read(reinterpret_cast<char*>(&lenA), sizeof(lenA));
-        string a(lenA, ' ');  // Create a string with the appropriate size
-        is.read(&a[0], lenA);  // Read the content of 'a'
-
-        is.read(reinterpret_cast<char*>(&lenB), sizeof(lenB));
-        string b(lenB, ' ');  // Create a string with the appropriate size
-        is.read(&b[0], lenB);  // Read the content of 'b'
-
-        return A(a, b);
-    }*/
 
     static TreeData deserialize(ifstream &is){
         size_t lenIA,lenN;

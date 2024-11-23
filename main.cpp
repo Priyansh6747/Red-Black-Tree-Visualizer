@@ -13,7 +13,7 @@
 #include "Source/UI.h"
 #include "Source/Utilities.h"
 #include "Source/SaveHeap.h"
-
+#include "Source/SaveManager.h"
 
 
 using namespace std;

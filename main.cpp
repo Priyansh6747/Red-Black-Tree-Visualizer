@@ -22,8 +22,6 @@ int main(int argc, char* argv[]) {
     int window_x = 1920,window_y = 1040;
     //RGBA
     SDL_Color TextColor = {0,0,0,255};
-    SDL_Color CircleColor = {255,255,0,255};
-    SDL_Color LineColor = {0,255,0,255};
     SDL_Color InputFieldColor = {200,200,200,30};
     SDL_Color InputFieldColorActive = {255,255,255,40};
     SDL_Color InsertButtonColor = {0,255,0,30};
@@ -32,6 +30,7 @@ int main(int argc, char* argv[]) {
     SDL_Color SaveBtnColor = {150,255,255,45};
     SDL_Color LoadBtnColor = {150,255,255,45};
     SDL_Color BackGroundColor = {150,150,210,45};
+    SDL_Color QuitColor = {255,0,0,255};
     SDL_Color RED = {255,0,0};
     SDL_Color Green = {0,0,0,255};
 
@@ -39,8 +38,9 @@ int main(int argc, char* argv[]) {
     SDL_Rect button = {300, window_y - 80, 100, 40};     // Button rectangle
     SDL_Rect DeleteBtn = {450, window_y - 80, 100, 40};     // Button rectangle
     SDL_Rect ResetBtn = {600, window_y - 80, 100, 40};
-    SDL_Rect SaveBtn = {window_x-100, 0, 100, 40};     // Button rectangle
-    SDL_Rect LoadBtn = {window_x-240, 0, 100, 40};     // Button rectangle
+    SDL_Rect SaveBtn = {window_x-80, 0, 60, 40};     // Button rectangle
+    SDL_Rect LoadBtn = {window_x-180, 0, 60, 40};     // Button rectangle
+    SDL_Rect QuitBtn = {window_x-80, window_y-80, 60, 40};     // Button rectangle
 
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -125,6 +125,8 @@ int main(int argc, char* argv[]) {
                     cout<<"Saving ";
                 }else if (mouseX > LoadBtn.x && mouseX < LoadBtn.x + LoadBtn.w && mouseY > LoadBtn.y && mouseY < LoadBtn.y + LoadBtn.h){
                     cout<<"Loading ";
+                }else if(mouseX > QuitBtn.x && mouseX < QuitBtn.x + QuitBtn.w && mouseY > QuitBtn.y && mouseY < QuitBtn.y + QuitBtn.h){
+                    running = false;
                 }
                 else {
                     SDL_StopTextInput();
@@ -153,6 +155,7 @@ int main(int argc, char* argv[]) {
         RenderButton(renderer,font,ResetBtn,"Reset",ResetButtonColor,TextColor);
         RenderButton(renderer,font,SaveBtn,"Save",SaveBtnColor,TextColor);
         RenderButton(renderer,font,LoadBtn,"Load",LoadBtnColor,TextColor);
+        RenderButton(renderer,font,QuitBtn,"Quit",QuitColor,TextColor);
 
         int level = 0,counter = 1;
         int r = 22, x = window_x / 2, y = r * 2;
@@ -194,6 +197,8 @@ int main(int argc, char* argv[]) {
         }
         SDL_RenderPresent(renderer);
     }
+    for(auto it : InputArray)
+        cout<<it.first<<" "<<((it.second)?"insert ":"Delete")<<"  ";
     SDL_StopTextInput();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

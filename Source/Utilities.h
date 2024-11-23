@@ -3,6 +3,8 @@
 #include <string>
 #include <cctype>
 #include <stdexcept>
+#include "Source/SaveManager.h"
+#include "Source/SaveHeap.h"
 
 using namespace std;
 #include <string>
@@ -32,6 +34,18 @@ int StringToInt(const std::string& str) {
     }
 }
 
+void OverWriteSaveManager(const SaveManager &obj){
+    ofstream fp("../Saved/Saves.dat",ios::out | ios::binary);
+    if(fp) obj.serialize(fp);
+    else  cout << "Error opening file!" << endl;
+}
 
-
+void loadSaveManager(SaveManager& SM){
+    ifstream fp("../Saved/Saves.dat", ios::in | ios::binary);
+    if (fp) {
+        SM.deserialize(fp);  // Deserialize the object from the file
+    } else {
+        cout << "Error opening file!" << endl;
+    }
+}
 #endif //RED_BLACK_TREE_VISUALIZER_UTILITIES_H

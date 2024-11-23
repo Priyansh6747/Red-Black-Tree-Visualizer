@@ -92,6 +92,7 @@ int main(int argc, char* argv[]) {
     vector<pair<int,bool>> LevelOrder;
     RBTree Tree;
     TreeData CurrentTree;
+    SaveManager SManager;
 
     // Main loop
     bool running = true;

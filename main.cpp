@@ -150,7 +150,7 @@ int main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(renderer, BackGroundColor.r, BackGroundColor.g, BackGroundColor.b, BackGroundColor.a);
         SDL_RenderClear(renderer);
 
-        string InputFieldText = inputText.empty()?(bIsInputActive?"Enter":"Click To Enter"):inputText;
+        string InputFieldText = inputText.empty()?(bIsInputActive?" ":"Click To Enter"):inputText;
 
         RenderInputField(renderer,font,inputField,InputFieldText,
                          (bIsInputActive)?InputFieldColorActive:InputFieldColor,TextColor);
@@ -199,9 +199,7 @@ int main(int argc, char* argv[]) {
         }
         SDL_RenderPresent(renderer);
     }
-    CurrentTree.SetInfo(InputArray,"A");
-    for(auto it : CurrentTree.GetInput())
-        cout<<it.first<<" "<<((it.second)?"insert ":"Delete")<<"  ";
+
     SDL_StopTextInput();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

@@ -8,7 +8,7 @@ A **Red-Black Tree Visualizer** built with **C++** and **SDL2**, designed to hel
 - **Dynamic Balancing**: Observe rotations and color changes that maintain the Red-Black Tree properties.
 - **Error Handling**: Detect and handle edge cases like duplicate insertions or empty deletions gracefully.
 - **User-Friendly Interface**: Designed for ease of use with a clean, intuitive UI.
-
+- **Multiple Tree Management**: Save and switch between trees effortlessly using the save button.
 
 ## Installation
 
@@ -52,6 +52,11 @@ A **Red-Black Tree Visualizer** built with **C++** and **SDL2**, designed to hel
       1. Removes a node and rebalances the tree to restore its properties.
    3. Reset: 
       1. Clears the current tree, allowing you to start fresh.
+   4. Save:
+      1. **Save the Current Tree:** Save the current working tree, including its structure and operations.
+      2. **Display Tree Buttons:** Create a button for each saved tree, labeled with the tree's root value,
+      with the minimum root value displayed first (priority queue ordering).
+      3. **Load a Tree on Click:** Load the clicked tree and make it the active tree in the visualizer.
 ## Contributing
 
 Contributions are welcome to enhance the functionality and features of the Red-Black Tree Visualizer.
@@ -68,8 +73,7 @@ Contributions are welcome to enhance the functionality and features of the Red-B
 
 If you'd like to contribute, here are some ideas for future features:
 
-1. Add Save/Load functionality to store and retrieve trees.
-2. Implement animations for rotations and recoloring during balancing.
-3. Extend UI with advanced features using libraries like Dear ImGui.
-4. Provide export/import functionality in formats like JSON.
-5. We’re open to suggestions and contributions that improve usability and learning outcomes.
+1. Implement animations for rotations and recoloring during balancing.
+2. Extend UI with advanced features using libraries like Dear ImGui.
+3. Provide export/import functionality in formats like JSON.
+4. We’re open to suggestions and contributions that improve usability and learning outcomes.

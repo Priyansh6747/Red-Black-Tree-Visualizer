@@ -1,6 +1,6 @@
 # Red-Black Tree Visualizer
 
-A **Red-Black Tree Visualizer** built with **C++** and **SFML**, designed to help users understand the structure and operations of Red-Black Trees through interactive visualization.
+A **Red-Black Tree Visualizer** built with **C++** and **SDL2**, designed to help users understand the structure and operations of Red-Black Trees through interactive visualization.
 
 ## Features
 

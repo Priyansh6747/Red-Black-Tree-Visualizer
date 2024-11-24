@@ -2,7 +2,12 @@
 #define RED_BLACK_TREE_VISUALIZER_RBTREE_H
 #include <bits/stdc++.h>
 using namespace std;
-enum Color {RED, BLACK, DOUBLE_BLACK};
+enum Color
+{
+    RED,
+    BLACK,
+    DOUBLE_BLACK
+};
 
 struct Node
 {
@@ -17,8 +22,8 @@ class RBTree
 {
 private:
     Node *root;
-protected:
 
+protected:
     void rotateLeft(Node *&);
 
     void rotateRight(Node *&);
@@ -39,9 +44,9 @@ protected:
 
     Node *maxValueNode(Node *&);
 
-    Node* insertBST(Node *&, Node *&);
+    Node *insertBST(Node *&, Node *&);
 
-    Node* deleteBST(Node *&, int);
+    Node *deleteBST(Node *&, int);
 
     int getBlackHeight(Node *);
 
@@ -58,45 +63,54 @@ public:
 
     void preorder();
 
-    vector<pair<int,bool>> LevelOrder();
+    vector<pair<int, bool>> LevelOrder();
 
-    int GetTop() const{
+    int GetTop() const
+    {
         return root->data;
     }
 };
 
-Node::Node(int data) {
+Node::Node(int data)
+{
     this->data = data;
     color = RED;
     left = right = parent = nullptr;
 }
 
-RBTree::RBTree() {
+RBTree::RBTree()
+{
     root = nullptr;
 }
 
-int RBTree::getColor(Node *&node) {
+int RBTree::getColor(Node *&node)
+{
     if (node == nullptr)
         return BLACK;
 
     return node->color;
 }
 
-void RBTree::setColor(Node *&node, int color) {
+void RBTree::setColor(Node *&node, int color)
+{
     if (node == nullptr)
         return;
 
     node->color = color;
 }
 
-Node* RBTree::insertBST(Node *&root, Node *&ptr) {
+Node *RBTree::insertBST(Node *&root, Node *&ptr)
+{
     if (root == nullptr)
         return ptr;
 
-    if (ptr->data < root->data) {
+    if (ptr->data < root->data)
+    {
         root->left = insertBST(root->left, ptr);
         root->left->parent = root;
-    } else if (ptr->data > root->data) {
+    }
+    else if (ptr->data > root->data)
+    {
         root->right = insertBST(root->right, ptr);
         root->right->parent = root;
     }
@@ -104,13 +118,15 @@ Node* RBTree::insertBST(Node *&root, Node *&ptr) {
     return root;
 }
 
-void RBTree::insertValue(int n) {
+void RBTree::insertValue(int n)
+{
     Node *node = new Node(n);
     root = insertBST(root, node);
     fixInsertRBTree(node);
 }
 
-void RBTree::rotateLeft(Node *&ptr) {
+void RBTree::rotateLeft(Node *&ptr)
+{
     Node *right_child = ptr->right;
     ptr->right = right_child->left;
 
@@ -130,7 +146,8 @@ void RBTree::rotateLeft(Node *&ptr) {
     ptr->parent = right_child;
 }
 
-void RBTree::rotateRight(Node *&ptr) {
+void RBTree::rotateRight(Node *&ptr)
+{
     Node *left_child = ptr->left;
     ptr->left = left_child->right;
 
@@ -150,21 +167,33 @@ void RBTree::rotateRight(Node *&ptr) {
     ptr->parent = left_child;
 }
 
-void RBTree::fixInsertRBTree(Node *&ptr) {
+void RBTree::fixInsertRBTree(Node *&ptr)
+{
     Node *parent = nullptr;
     Node *grandparent = nullptr;
-    while (ptr != root && getColor(ptr) == RED && getColor(ptr->parent) == RED) {
+    while (ptr != root && getColor(ptr) == RED && getColor(ptr->parent) == RED)
+    {
         parent = ptr->parent;
         grandparent = parent->parent;
-        if (parent == grandparent->left) {
+        // Case when the parent is the LEFT child of the grandparent
+        if (parent == grandparent->left)
+        {
+            // Uncle node is right child of grandparent
             Node *uncle = grandparent->right;
-            if (getColor(uncle) == RED) {
+            // Case 1: Uncle is red (Recoloring)
+            if (getColor(uncle) == RED)
+            {
                 setColor(uncle, BLACK);
                 setColor(parent, BLACK);
                 setColor(grandparent, RED);
+                // Move up the tree to fix higher violations
                 ptr = grandparent;
-            } else {
-                if (ptr == parent->right) {
+            }
+            else
+            {
+                if (ptr == parent->right)
+                {
+                    // Case 2: Node is the right child of its parent (Left rotation required)
                     rotateLeft(parent);
                     ptr = parent;
                     parent = ptr->parent;
@@ -173,15 +202,22 @@ void RBTree::fixInsertRBTree(Node *&ptr) {
                 swap(parent->color, grandparent->color);
                 ptr = parent;
             }
-        } else {
+        }
+        // Case when the parent is the RIGHT child of the grandparent
+        else
+        {
             Node *uncle = grandparent->left;
-            if (getColor(uncle) == RED) {
+            if (getColor(uncle) == RED)
+            {
                 setColor(uncle, BLACK);
                 setColor(parent, BLACK);
                 setColor(grandparent, RED);
                 ptr = grandparent;
-            } else {
-                if (ptr == parent->left) {
+            }
+            else
+            {
+                if (ptr == parent->left)
+                {
                     rotateRight(parent);
                     ptr = parent;
                     parent = ptr->parent;
@@ -195,54 +231,71 @@ void RBTree::fixInsertRBTree(Node *&ptr) {
     setColor(root, BLACK);
 }
 
-void RBTree::fixDeleteRBTree(Node *&node) {
+void RBTree::fixDeleteRBTree(Node *&node)
+{
     if (node == nullptr)
         return;
 
-    if (node == root) {
+    if (node == root)
+    {
         root = nullptr;
         return;
     }
 
-    if (getColor(node) == RED || getColor(node->left) == RED || getColor(node->right) == RED) {
+    if (getColor(node) == RED || getColor(node->left) == RED || getColor(node->right) == RED)
+    {
         Node *child = node->left != nullptr ? node->left : node->right;
 
-        if (node == node->parent->left) {
+        if (node == node->parent->left)
+        {
             node->parent->left = child;
             if (child != nullptr)
                 child->parent = node->parent;
             setColor(child, BLACK);
             delete (node);
-        } else {
+        }
+        else
+        {
             node->parent->right = child;
             if (child != nullptr)
                 child->parent = node->parent;
             setColor(child, BLACK);
             delete (node);
         }
-    } else {
+    }
+    else
+    {
         Node *sibling = nullptr;
         Node *parent = nullptr;
         Node *ptr = node;
         setColor(ptr, DOUBLE_BLACK);
-        while (ptr != root && getColor(ptr) == DOUBLE_BLACK) {
+        while (ptr != root && getColor(ptr) == DOUBLE_BLACK)
+        {
             parent = ptr->parent;
-            if (ptr == parent->left) {
+            if (ptr == parent->left)
+            {
                 sibling = parent->right;
-                if (getColor(sibling) == RED) {
+                if (getColor(sibling) == RED)
+                {
                     setColor(sibling, BLACK);
                     setColor(parent, RED);
                     rotateLeft(parent);
-                } else {
-                    if (getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK) {
+                }
+                else
+                {
+                    if (getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK)
+                    {
                         setColor(sibling, RED);
-                        if(getColor(parent) == RED)
+                        if (getColor(parent) == RED)
                             setColor(parent, BLACK);
                         else
                             setColor(parent, DOUBLE_BLACK);
                         ptr = parent;
-                    } else {
-                        if (getColor(sibling->right) == BLACK) {
+                    }
+                    else
+                    {
+                        if (getColor(sibling->right) == BLACK)
+                        {
                             setColor(sibling->left, BLACK);
                             setColor(sibling, RED);
                             rotateRight(sibling);
@@ -255,22 +308,31 @@ void RBTree::fixDeleteRBTree(Node *&node) {
                         break;
                     }
                 }
-            } else {
+            }
+            else
+            {
                 sibling = parent->left;
-                if (getColor(sibling) == RED) {
+                if (getColor(sibling) == RED)
+                {
                     setColor(sibling, BLACK);
                     setColor(parent, RED);
                     rotateRight(parent);
-                } else {
-                    if (getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK) {
+                }
+                else
+                {
+                    if (getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK)
+                    {
                         setColor(sibling, RED);
                         if (getColor(parent) == RED)
                             setColor(parent, BLACK);
                         else
                             setColor(parent, DOUBLE_BLACK);
                         ptr = parent;
-                    } else {
-                        if (getColor(sibling->left) == BLACK) {
+                    }
+                    else
+                    {
+                        if (getColor(sibling->left) == BLACK)
+                        {
                             setColor(sibling->right, BLACK);
                             setColor(sibling, RED);
                             rotateLeft(sibling);
@@ -289,12 +351,13 @@ void RBTree::fixDeleteRBTree(Node *&node) {
             node->parent->left = nullptr;
         else
             node->parent->right = nullptr;
-        delete(node);
+        delete (node);
         setColor(root, BLACK);
     }
 }
 
-Node* RBTree::deleteBST(Node *&root, int data) {
+Node *RBTree::deleteBST(Node *&root, int data)
+{
     if (root == nullptr)
         return root;
 
@@ -312,12 +375,14 @@ Node* RBTree::deleteBST(Node *&root, int data) {
     return deleteBST(root->right, temp->data);
 }
 
-void RBTree::deleteValue(int data) {
+void RBTree::deleteValue(int data)
+{
     Node *node = deleteBST(root, data);
     fixDeleteRBTree(node);
 }
 
-void RBTree::inorderBST(Node *&ptr) {
+void RBTree::inorderBST(Node *&ptr)
+{
     if (ptr == nullptr)
         return;
 
@@ -326,11 +391,13 @@ void RBTree::inorderBST(Node *&ptr) {
     inorderBST(ptr->right);
 }
 
-void RBTree::inorder() {
+void RBTree::inorder()
+{
     inorderBST(root);
 }
 
-void RBTree::preorderBST(Node *&ptr) {
+void RBTree::preorderBST(Node *&ptr)
+{
     if (ptr == nullptr)
         return;
 
@@ -339,12 +406,14 @@ void RBTree::preorderBST(Node *&ptr) {
     preorderBST(ptr->right);
 }
 
-void RBTree::preorder() {
+void RBTree::preorder()
+{
     preorderBST(root);
     cout << "-------" << endl;
 }
 
-Node *RBTree::minValueNode(Node *&node) {
+Node *RBTree::minValueNode(Node *&node)
+{
 
     Node *ptr = node;
 
@@ -354,7 +423,8 @@ Node *RBTree::minValueNode(Node *&node) {
     return ptr;
 }
 
-Node* RBTree::maxValueNode(Node *&node) {
+Node *RBTree::maxValueNode(Node *&node)
+{
     Node *ptr = node;
 
     while (ptr->right != nullptr)
@@ -363,9 +433,11 @@ Node* RBTree::maxValueNode(Node *&node) {
     return ptr;
 }
 
-int RBTree::getBlackHeight(Node *node) {
+int RBTree::getBlackHeight(Node *node)
+{
     int blackheight = 0;
-    while (node != nullptr) {
+    while (node != nullptr)
+    {
         if (getColor(node) == BLACK)
             blackheight++;
         node = node->left;
@@ -373,33 +445,36 @@ int RBTree::getBlackHeight(Node *node) {
     return blackheight;
 }
 
-
-
-void RBTree::merge(RBTree rbTree2) {
+void RBTree::merge(RBTree rbTree2)
+{
     int temp;
     Node *c, *temp_ptr;
     Node *root1 = root;
     Node *root2 = rbTree2.root;
     int initialblackheight1 = getBlackHeight(root1);
     int initialblackheight2 = getBlackHeight(root2);
-    if (initialblackheight1 > initialblackheight2) {
+    if (initialblackheight1 > initialblackheight2)
+    {
         c = maxValueNode(root1);
         temp = c->data;
         deleteValue(c->data);
         root1 = root;
     }
-    else if (initialblackheight2 > initialblackheight1) {
+    else if (initialblackheight2 > initialblackheight1)
+    {
         c = minValueNode(root2);
         temp = c->data;
         rbTree2.deleteValue(c->data);
         root2 = rbTree2.root;
     }
-    else {
+    else
+    {
         c = minValueNode(root2);
         temp = c->data;
         rbTree2.deleteValue(c->data);
         root2 = rbTree2.root;
-        if (initialblackheight1 != getBlackHeight(root2)) {
+        if (initialblackheight1 != getBlackHeight(root2))
+        {
             rbTree2.insertValue(c->data);
             root2 = rbTree2.root;
             c = maxValueNode(root1);
@@ -408,21 +483,24 @@ void RBTree::merge(RBTree rbTree2) {
             root1 = root;
         }
     }
-    setColor(c,RED);
+    setColor(c, RED);
     int finalblackheight1 = getBlackHeight(root1);
     int finalblackheight2 = getBlackHeight(root2);
-    if (finalblackheight1 == finalblackheight2) {
+    if (finalblackheight1 == finalblackheight2)
+    {
         c->left = root1;
         root1->parent = c;
         c->right = root2;
         root2->parent = c;
-        setColor(c,BLACK);
+        setColor(c, BLACK);
         c->data = temp;
         root = c;
     }
-    else if (finalblackheight2 > finalblackheight1) {
+    else if (finalblackheight2 > finalblackheight1)
+    {
         Node *ptr = root2;
-        while (finalblackheight1 != getBlackHeight(ptr)) {
+        while (finalblackheight1 != getBlackHeight(ptr))
+        {
             temp_ptr = ptr;
             ptr = ptr->left;
         }
@@ -439,18 +517,22 @@ void RBTree::merge(RBTree rbTree2) {
             ptr->parent = c;
         ptr_parent->left = c;
         c->parent = ptr_parent;
-        if (getColor(ptr_parent) == RED) {
+        if (getColor(ptr_parent) == RED)
+        {
             fixInsertRBTree(c);
         }
-        else if (getColor(ptr) == RED){
+        else if (getColor(ptr) == RED)
+        {
             fixInsertRBTree(ptr);
         }
         c->data = temp;
         root = root2;
     }
-    else {
+    else
+    {
         Node *ptr = root1;
-        while (finalblackheight2 != getBlackHeight(ptr)) {
+        while (finalblackheight2 != getBlackHeight(ptr))
+        {
             ptr = ptr->right;
         }
         Node *ptr_parent = ptr->parent;
@@ -460,10 +542,12 @@ void RBTree::merge(RBTree rbTree2) {
         ptr->parent = c;
         ptr_parent->right = c;
         c->parent = ptr_parent;
-        if (getColor(ptr_parent) == RED) {
+        if (getColor(ptr_parent) == RED)
+        {
             fixInsertRBTree(c);
         }
-        else if (getColor(ptr) == RED) {
+        else if (getColor(ptr) == RED)
+        {
             fixInsertRBTree(ptr);
         }
         c->data = temp;
@@ -473,27 +557,33 @@ void RBTree::merge(RBTree rbTree2) {
 }
 
 // {value,true/false} true--> red false -->black;
-vector<pair<int,bool>> RBTree::LevelOrder() {
-    vector<pair<int,bool>> result;
-    if(!root) return result;
-    queue<Node*> q;
+vector<pair<int, bool>> RBTree::LevelOrder()
+{
+    vector<pair<int, bool>> result;
+    if (!root)
+        return result;
+    queue<Node *> q;
     q.push(root);
-    while (!q.empty()){
-        Node* Current = q.front();
+    while (!q.empty())
+    {
+        Node *Current = q.front();
         q.pop();
-        if(Current){
-            result.push_back({Current->data,getColor(Current) == RED});
+        if (Current)
+        {
+            result.push_back({Current->data, getColor(Current) == RED});
             q.push(Current->left);
             q.push(Current->right);
-        }else result.emplace_back(-99, false);
+        }
+        else
+            result.emplace_back(-99, false);
     }
 
-    //trim trailing -99s
-    while (!result.empty() && result.back().first == -99) {
+    // trim trailing -99s
+    while (!result.empty() && result.back().first == -99)
+    {
         result.pop_back();
     }
     return result;
 }
 
-
-#endif //RED_BLACK_TREE_VISUALIZER_RBTREE_H
+#endif // RED_BLACK_TREE_VISUALIZER_RBTREE_H

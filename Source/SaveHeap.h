@@ -8,7 +8,7 @@ using namespace std;
 
 class TreeData {
 private:
-    string inputArray; // A string ex "0T 2T 2T 3T 2F"
+    vector<pair<int,bool>> inputArray; // A string ex "0T 2T 2T 3T 2F"
     string name;
     int Top;
 public:
@@ -20,11 +20,7 @@ public:
         clear();
         Top=top;
         name=Name;
-        for(auto it : InputArray){
-            inputArray += to_string(it.first);
-            inputArray += (it.second)?"+":"-";
-            inputArray +=",";
-        }
+        inputArray = InputArray;
     }
 
     // Comparator for sorting by lastModifiedDate (most recent first)
@@ -44,14 +40,7 @@ public:
     }
 
     vector<pair<int,bool>> GetInput(){
-        vector<pair<int,bool>> arr;
-        pair<int,bool> p;
-        for(int i =0 ;i<inputArray.size();i += 3){
-            p.first = std::stoi(&inputArray[i]);
-            p.second = (inputArray[i+1] == '+');
-            arr.push_back(p);
-        }
-        return arr;
+        return inputArray;
     }
 
     void serialize(ofstream &os){
@@ -59,7 +48,6 @@ public:
         auto lenN = name.size();
 
         os.write(reinterpret_cast<const char *>(&lenIA), sizeof(lenIA));
-        os.write(inputArray.c_str(),lenIA);
 
         os.write(reinterpret_cast<const char *>(&lenN), sizeof(lenN));
         os.write(name.c_str(),lenN);
@@ -77,7 +65,6 @@ public:
         is.read(&N[0],lenN);
 
         TreeData obj;
-        obj.inputArray = IA;
         obj.name = N;
 
         return obj;

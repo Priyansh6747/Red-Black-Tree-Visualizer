@@ -109,12 +109,22 @@ int main(int argc, char* argv[]) {
                     if (mouseX > it.first.x && mouseX < it.first.x + it.first.w && mouseY > it.first.y && mouseY < it.first.y + it.first.h){
                         for (auto i : LevelOrder)
                             Tree.deleteValue(i.first);
-                        for(auto i : it.second.GetInput()){
+                        InputArray.clear();
+                        auto inputFromTree = it.second.GetInput();
+                        for (auto i : inputFromTree) {
                             (i.second)?Tree.insertValue(i.first):Tree.deleteValue(i.first);
                             InputArray.push_back(i);
                         }
-
                     }
+                }
+                if (mouseX > inputField.x && mouseX < inputField.x + inputField.w && mouseY > inputField.y && mouseY < inputField.y + inputField.h){
+                    {
+                        SDL_StartTextInput();
+                        bIsInputActive = true;
+                    }
+                } else {
+                    SDL_StopTextInput();
+                    bIsInputActive = false;
                 }
                 if (mouseX > button.x && mouseX < button.x + button.w && mouseY > button.y && mouseY < button.y + button.h) {
                     // Button clicked
@@ -122,13 +132,11 @@ int main(int argc, char* argv[]) {
                         Tree.insertValue(StringToInt(inputText));
                         InputArray.emplace_back(StringToInt(inputText),true);
                         inputText.clear();  // Clear input field
-                    }
-                }else if (mouseX > inputField.x && mouseX < inputField.x + inputField.w && mouseY > inputField.y && mouseY < inputField.y + inputField.h){
-                    {
                         SDL_StartTextInput();
                         bIsInputActive = true;
                     }
-                }else if (mouseX > DeleteBtn.x && mouseX < DeleteBtn.x + DeleteBtn.w && mouseY > DeleteBtn.y && mouseY < DeleteBtn.y + DeleteBtn.h){
+                }
+                if (mouseX > DeleteBtn.x && mouseX < DeleteBtn.x + DeleteBtn.w && mouseY > DeleteBtn.y && mouseY < DeleteBtn.y + DeleteBtn.h){
                     if(!inputText.empty()){
                         InputArray.emplace_back(StringToInt(inputText),false);
                         Tree.deleteValue(StringToInt(inputText));
@@ -136,33 +144,34 @@ int main(int argc, char* argv[]) {
                         LevelOrder = Tree.LevelOrder();
                         inputText.clear();
                     }
-                }else if (mouseX > ResetBtn.x && mouseX < ResetBtn.x + ResetBtn.w && mouseY > ResetBtn.y && mouseY < ResetBtn.y + ResetBtn.h){
+                } if (mouseX > ResetBtn.x && mouseX < ResetBtn.x + ResetBtn.w && mouseY > ResetBtn.y && mouseY < ResetBtn.y + ResetBtn.h){
+                    InputArray.clear();
                     for (auto i : LevelOrder)
                         Tree.deleteValue(i.first);
-                }else if(mouseX > QuitBtn.x && mouseX < QuitBtn.x + QuitBtn.w && mouseY > QuitBtn.y && mouseY < QuitBtn.y + QuitBtn.h){
+                } if(mouseX > QuitBtn.x && mouseX < QuitBtn.x + QuitBtn.w && mouseY > QuitBtn.y && mouseY < QuitBtn.y + QuitBtn.h){
                     running = false;
                     break;
-                }else if (mouseX > SaveBtn.x && mouseX < SaveBtn.x + SaveBtn.w && mouseY > SaveBtn.y && mouseY < SaveBtn.y + SaveBtn.h){
-                    CurrentTree.SetInfo(InputArray, "A", Tree.GetTop());
-                    Save(CurrentTree, SM);
-                    for (auto i : LevelOrder)
-                        Tree.deleteValue(i.first);
+                } if (mouseX > SaveBtn.x && mouseX < SaveBtn.x + SaveBtn.w && mouseY > SaveBtn.y && mouseY < SaveBtn.y + SaveBtn.h){
+                    if(!LevelOrder.empty()){
+                        CurrentTree.clear();
+                        CurrentTree.SetInfo(InputArray, "A", Tree.GetTop());
+                        Save(CurrentTree, SM);
+                        for (auto i : LevelOrder)
+                            Tree.deleteValue(i.first);
 
-                    // Clear the button list and regenerate
-                    savedTreeButtons.clear();
-                    InputArray.clear();
-                    CurrentTree.clear();
-                    int i = 0;
-                    for (const auto& it : SM.GetAll()) {
-                        SDL_Rect loadReact = {window_x - 60, 60 + 50 * i, 40, 40};
-                        savedTreeButtons.push_back({loadReact, it});
-                        i++;
+                        // Clear the button list and regenerate
+                        savedTreeButtons.clear();
+                        InputArray.clear();
+                        CurrentTree.clear();
+                        int i = 0;
+                        for (const auto& it : SM.GetAll()) {
+                            SDL_Rect loadReact = {window_x - 60, 60 + 50 * i, 40, 40};
+                            savedTreeButtons.emplace_back(loadReact, it);
+                            i++;
+                        }
                     }
                 }
-                else {
-                    SDL_StopTextInput();
-                    bIsInputActive = false;
-                }
+
             } else if (event.type == SDL_TEXTINPUT) {
                 char currentChar = event.text.text[0];
                 if(currentChar == '-') {

@@ -24,15 +24,15 @@ int main(int argc, char* argv[]) {
     int window_x = 1920,window_y = 1040;
     //RGBA
     SDL_Color TextColor = {0,0,0,255};
-    SDL_Color InputFieldColor = {200,200,200,30};
+    SDL_Color InputFieldColor = {220,220,220,30};
     SDL_Color InputFieldColorActive = {255,255,255,40};
-    SDL_Color InsertButtonColor = {0,255,0,30};
-    SDL_Color DeleteButtonColor = {255,0,0,255};
-    SDL_Color ResetButtonColor = {0,0,250,255};
-    SDL_Color SaveBtnColor = {150,255,255,45};
-    SDL_Color LoadBtnColor = {150,255,255,45};
-    SDL_Color BackGroundColor = {150,150,210,45};
-    SDL_Color QuitColor = {255,0,0,255};
+    SDL_Color InsertButtonColor = {94, 255, 107,30};
+    SDL_Color DeleteButtonColor = {255, 49, 49 ,255};
+    SDL_Color ResetButtonColor = {94, 255, 223 ,255};
+    SDL_Color SaveBtnColor = {255, 157, 26 ,45};
+    SDL_Color LoadBtnColor = {217, 217, 217 ,45};
+    SDL_Color BackGroundColor = {180, 190, 255,10};
+    SDL_Color QuitColor = {255, 49, 49 ,255};
     SDL_Color RED = {255,0,0};
     SDL_Color Green = {0,0,0,255};
 

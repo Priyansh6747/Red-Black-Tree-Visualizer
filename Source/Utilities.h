@@ -61,4 +61,8 @@ void loadSaveManager(SaveManager& SM, const string& IncludePath) {
     }
 }
 
+void Save(TreeData& Tree,SaveManager& SM){
+    SM.insert(Tree);
+    Tree.clear();
+}
 #endif // RED_BLACK_TREE_VISUALIZER_UTILITIES_H

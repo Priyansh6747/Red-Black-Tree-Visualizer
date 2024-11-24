@@ -10,13 +10,15 @@ class TreeData {
 private:
     string inputArray; // A string ex "0T 2T 2T 3T 2F"
     string name;
+    int Top;
 public:
     void clear(){
         inputArray.clear();
         name.clear();
     }
-    void SetInfo(const vector<pair<int, bool>>& InputArray, const string& Name){
+    void SetInfo(const vector<pair<int, bool>>& InputArray, const string& Name,int top){
         clear();
+        Top=top;
         name=Name;
         for(auto it : InputArray){
             inputArray += to_string(it.first);
@@ -27,14 +29,18 @@ public:
 
     // Comparator for sorting by lastModifiedDate (most recent first)
     bool operator<(const TreeData& other) const {
-        return name < other.name;
+        return Top < other.Top;
     }
     bool operator>(const TreeData& other) const {
-        return name > other.name;
+        return Top > other.Top;
     }
 
     string GetName(){
         return name;
+    }
+
+    int GetTop(){
+        return Top;
     }
 
     vector<pair<int,bool>> GetInput(){

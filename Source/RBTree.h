@@ -59,6 +59,10 @@ public:
     void preorder();
 
     vector<pair<int,bool>> LevelOrder();
+
+    int GetTop() const{
+        return root->data;
+    }
 };
 
 Node::Node(int data) {

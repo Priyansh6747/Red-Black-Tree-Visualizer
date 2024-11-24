@@ -16,6 +16,16 @@ public:
     }
     bool Empty(){return pq.empty();}
 
+    vector<TreeData> GetAll(){
+        priority_queue<TreeData,vector<TreeData>,greater<>> priorityQueue = pq;
+        vector<TreeData> ToReturn;
+        while (!priorityQueue.empty()){
+            ToReturn.push_back(priorityQueue.top());
+            priorityQueue.pop();
+        }
+        return ToReturn;
+    }
+
     void serialize(ofstream &os) const{
         size_t size = pq.size();
         os.write(reinterpret_cast<const char*>(&size), sizeof(size));

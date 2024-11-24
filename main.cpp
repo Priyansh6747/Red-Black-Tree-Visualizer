@@ -41,7 +41,6 @@ int main(int argc, char* argv[]) {
     SDL_Rect DeleteBtn = {450, window_y - 80, 100, 40};     // Button rectangle
     SDL_Rect ResetBtn = {600, window_y - 80, 100, 40};
     SDL_Rect SaveBtn = {window_x-80, 0, 60, 40};     // Button rectangle
-    SDL_Rect LoadBtn = {window_x-180, 0, 60, 40};     // Button rectangle
     SDL_Rect QuitBtn = {window_x-80, window_y-80, 60, 40};     // Button rectangle
 
 
@@ -92,7 +91,8 @@ int main(int argc, char* argv[]) {
     vector<pair<int,bool>> LevelOrder;
     RBTree Tree;
     TreeData CurrentTree;
-
+    SaveManager SM;
+    vector<pair<SDL_Rect, TreeData>> savedTreeButtons;
 
     // Main loop
     bool running = true;
@@ -105,6 +105,17 @@ int main(int argc, char* argv[]) {
             else if (event.type == SDL_MOUSEBUTTONDOWN) {
                 int mouseX = event.button.x;
                 int mouseY = event.button.y;
+                for(auto it : savedTreeButtons){
+                    if (mouseX > it.first.x && mouseX < it.first.x + it.first.w && mouseY > it.first.y && mouseY < it.first.y + it.first.h){
+                        for (auto i : LevelOrder)
+                            Tree.deleteValue(i.first);
+                        for(auto i : it.second.GetInput()){
+                            (i.second)?Tree.insertValue(i.first):Tree.deleteValue(i.first);
+                            InputArray.push_back(i);
+                        }
+
+                    }
+                }
                 if (mouseX > button.x && mouseX < button.x + button.w && mouseY > button.y && mouseY < button.y + button.h) {
                     // Button clicked
                     if (!inputText.empty()) {
@@ -131,6 +142,22 @@ int main(int argc, char* argv[]) {
                 }else if(mouseX > QuitBtn.x && mouseX < QuitBtn.x + QuitBtn.w && mouseY > QuitBtn.y && mouseY < QuitBtn.y + QuitBtn.h){
                     running = false;
                     break;
+                }else if (mouseX > SaveBtn.x && mouseX < SaveBtn.x + SaveBtn.w && mouseY > SaveBtn.y && mouseY < SaveBtn.y + SaveBtn.h){
+                    CurrentTree.SetInfo(InputArray, "A", Tree.GetTop());
+                    Save(CurrentTree, SM);
+                    for (auto i : LevelOrder)
+                        Tree.deleteValue(i.first);
+
+                    // Clear the button list and regenerate
+                    savedTreeButtons.clear();
+                    InputArray.clear();
+                    CurrentTree.clear();
+                    int i = 0;
+                    for (const auto& it : SM.GetAll()) {
+                        SDL_Rect loadReact = {window_x - 60, 60 + 50 * i, 40, 40};
+                        savedTreeButtons.push_back({loadReact, it});
+                        i++;
+                    }
                 }
                 else {
                     SDL_StopTextInput();
@@ -158,6 +185,10 @@ int main(int argc, char* argv[]) {
         RenderButton(renderer,font,DeleteBtn,"Delete",DeleteButtonColor,TextColor);
         RenderButton(renderer,font,ResetBtn,"Reset",ResetButtonColor,TextColor);
         RenderButton(renderer,font,QuitBtn,"Quit",QuitColor,TextColor);
+        RenderButton(renderer,font,SaveBtn,"SAVE",SaveBtnColor,TextColor);
+        for (auto& Button : savedTreeButtons)
+            RenderButton(renderer, font, Button.first, to_string(Button.second.GetTop()), LoadBtnColor, TextColor);
+
 
         int level = 0,counter = 1;
         int r = 22, x = window_x / 2, y = r * 2;

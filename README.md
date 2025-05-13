@@ -18,13 +18,13 @@ A **Red-Black Tree Visualizer** built with **C++** and **SDL2**, designed to hel
    ```
 
 ## Usage
-
-1. The program does not contain a prebuilt executable file, so you need to build it first (or use a released version in the future).
+1. Extract the contents of `src.zip` into the root directory.
+2. The program does not contain a prebuilt executable file, so you need to build it first (or use a released version in the future).
    To build it, open a terminal in the project directory and run:
    ```bash
     mingw32-make -f MakeFile
     ```
-2. To run the program, use the following command:
+3. To run the program, use the following command:
     ```bash
     .\main.exe    
     ```
